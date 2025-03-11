@@ -1,0 +1,49 @@
+# Multi-stage build for optimized TCG app
+# Stage 1: Build dependencies
+FROM node:20-slim AS deps
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+
+# Stage 2: Build the application
+FROM node:20-slim AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+# Skip TypeScript type checking for faster builds
+RUN npx vite --config vite.config.js build && node scripts/optimize.js
+
+# Stage 3: Create runtime image with minimal dependencies
+FROM node:20-alpine AS runner
+WORKDIR /app
+
+# Install only production dependencies
+COPY package*.json ./
+RUN npm ci --omit=dev --no-audit --no-fund && npm cache clean --force
+
+# Create required directories
+RUN mkdir -p cache/processed_images cache/split_images
+
+# Create empty cache files if they don't exist
+RUN echo '{}' > cache/analysis_cache.json && \
+    echo '{}' > cache/art_cache.json && \
+    echo '{}' > cache/card_details_cache.json
+
+# Copy only the necessary files from the builder
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/server.js ./server.js
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/dist/compressed ./dist/compressed
+
+# Set environment variables
+ENV NODE_ENV=production
+ENV PORT=8080
+
+# Expose port
+EXPOSE 8080
+
+# Set proper user for security
+USER node
+
+# Set the command
+CMD ["node", "server.js"]

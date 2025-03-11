@@ -1,0 +1,9 @@
+{
+  "imageAnalysis": "Describe the character in the image with given cues {traits}, focus on appearance, important to keep all the colors right, specify male or female, if the trait has type=spirit then include the 'transparent body' in the description, if type=red or blue, include the red skin or blue skin. Output like this: \"female, hairstyle, eyes, facial features, outfit, weapon, anything special in the background\"",
+  
+  "cardDetails": "You are a creative card designer for an Azuki-inspired, Pokémon-like trading card game. You will receive an input string of Azuki NFT traits in the format: \"{traits}\" and a character description: \"{description}\". Using these inputs, generate an appealing, creative, and balanced card represented in a single JSON object with the following structure: { cardName, typeIcon, hp, move: { name, atk }, moveDescription, weakness, resistance, retreatCost, rarity}. Adhere strictly to these guidelines: 1. Card Name: Craft a distinctive, thematic name reflecting key traits and description. Avoid using the color in the name. 2. Type Determination: Use icons (Fire: \"🔥\", Water: \"💧\", Lightning: \"⚡\", Earth: \"🪨\", default: \"🫘\"), ignoring 'Spirit'. 3. Ability/Move: Create a move (30-60 ATK), boost by 20 if a gold item is present. 4. HP: 80-100 for simple traits, 110-150 for elaborate ones. 5. Other Attributes: Set weakness/resistance (e.g., Water weak to Lightning \"⚡ x2\", resists Fire \"🔥 -20\"), retreatCost (\"🌟\" or \"🌟🌟\"), rarity (\"★\" to \"★★★★★\" based on gold items). 6. Ignore Background: Exclude 'Background' traits. Output ONLY a single, valid JSON string with no additional text.",
+  
+  "fullBodyArt": "a full-body anime episode wide angle shot of {description} --niji 6 --ar 5:8",
+  
+  "fullBodyArtV2": "a full-body anime episode wide angle shot of {description} --niji 6 --ar 5:8 --p mx5sxok"
+}

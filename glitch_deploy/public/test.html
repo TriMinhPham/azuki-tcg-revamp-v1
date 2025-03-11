@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Azuki TCG Test</title>
+  <style>
+    body { 
+      font-family: sans-serif; 
+      text-align: center; 
+      padding: 20px; 
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    button {
+      padding: 10px 15px;
+      margin: 10px;
+      background: #e74c3c;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    #response {
+      text-align: left;
+      background: #f5f5f5;
+      padding: 15px;
+      border-radius: 5px;
+      margin-top: 20px;
+      overflow: auto;
+    }
+  </style>
+</head>
+<body>
+  <h1>Azuki TCG Server Test</h1>
+  <p>Click the button below to test if the API is working correctly:</p>
+  
+  <button id="healthCheck">Test API Health</button>
+  
+  <div id="response">Response will appear here...</div>
+  
+  <script>
+    document.getElementById('healthCheck').addEventListener('click', function() {
+      fetch('/api/health')
+        .then(response => response.json())
+        .then(data => {
+          document.getElementById('response').innerHTML = 
+            '<h3>Success!</h3><pre>' + JSON.stringify(data, null, 2) + '</pre>';
+        })
+        .catch(error => {
+          document.getElementById('response').innerHTML = 
+            '<h3>Error</h3><p>' + error.message + '</p>';
+        });
+    });
+  </script>
+</body>
+</html>

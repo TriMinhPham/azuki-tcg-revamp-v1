@@ -1,0 +1,58 @@
+{
+  "name": "azuki-tcg-revamp",
+  "version": "1.0.0",
+  "description": "A more optimized Azuki TCG Generator",
+  "scripts": {
+    "dev": "npx vite --config vite.config.js",
+    "build": "npx vite --config vite.config.js build && node scripts/optimize.js",
+    "build:check": "tsc --skipLibCheck && npx vite --config vite.config.js build && node scripts/optimize.js",
+    "preview": "npx vite --config vite.config.js preview",
+    "server": "node server.js",
+    "start": "concurrently \"npm run server\" \"npm run dev\"",
+    "prod": "npm run build && npm run server",
+    "clean": "rm -rf dist node_modules/.vite",
+    "analyze": "npx vite-bundle-visualizer",
+    "deploy": "./deploy.sh",
+    "deploy:gcloud": "./deploy-gcloud.sh",
+    "deploy:optimized": "./deploy-optimized.sh",
+    "deploy:simple": "./deploy-simple.sh",
+    "docker:build": "docker build -t azuki-tcg .",
+    "docker:build:optimized": "docker build -t azuki-tcg-optimized -f Dockerfile.optimized .",
+    "docker:run": "docker run -p 3001:8080 -e PORT=8080 azuki-tcg",
+    "docker:run:optimized": "docker run -p 3001:8080 -e PORT=8080 azuki-tcg-optimized",
+    "deploy:docker": "docker build -t azuki-tcg . && docker tag azuki-tcg gcr.io/$GOOGLE_CLOUD_PROJECT/azuki-tcg && docker push gcr.io/$GOOGLE_CLOUD_PROJECT/azuki-tcg && gcloud run deploy azuki-tcg --image gcr.io/$GOOGLE_CLOUD_PROJECT/azuki-tcg --platform managed --region us-central1 --allow-unauthenticated"
+  },
+  "keywords": [
+    "azuki",
+    "tcg",
+    "nft",
+    "react",
+    "three.js"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@react-three/drei": "^10.0.4",
+    "@react-three/fiber": "^9.1.0",
+    "@types/three": "^0.174.0",
+    "axios": "^1.8.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "node-fetch": "^3.3.2",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-router-dom": "^7.3.0",
+    "sharp": "^0.33.5",
+    "three": "^0.174.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.10",
+    "@types/react-dom": "^19.0.4",
+    "@vitejs/plugin-react-swc": "^3.8.0",
+    "concurrently": "^8.2.2",
+    "terser": "^5.39.0",
+    "typescript": "^5.8.2",
+    "vite": "^6.2.1"
+  }
+}

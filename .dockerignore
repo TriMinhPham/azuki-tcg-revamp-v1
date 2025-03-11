@@ -1,0 +1,42 @@
+# Git
+.git
+.gitignore
+
+# Node
+node_modules
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+
+# Docker
+Dockerfile
+docker-compose.yaml
+.dockerignore
+
+# Cache and local data
+cache/processed_images/*
+!cache/processed_images/.gitkeep
+cache/split_images/*
+!cache/split_images/.gitkeep
+
+# Environment variables
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+# IDEs and editors
+.idea
+.vscode
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Large debug files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

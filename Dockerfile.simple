@@ -1,0 +1,26 @@
+FROM node:20-slim
+
+# Set working directory
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+
+# Install dependencies
+RUN npm install
+
+# Copy source code
+COPY . .
+
+# Create required directories and files
+RUN mkdir -p cache/processed_images cache/split_images && \
+    echo '{}' > cache/art_cache.json && \
+    echo '{}' > cache/analysis_cache.json && \
+    echo '{}' > cache/card_details_cache.json
+
+# Expose the port
+ENV PORT=8080
+EXPOSE 8080
+
+# Start the server
+CMD ["node", "server.js"]
