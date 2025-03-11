@@ -1329,7 +1329,7 @@ export const LayeredCard3D = ({
                       fontWeight="bold"
                       letterSpacing={0.004}
                     >
-                      {azukiNumber} {'\u2022'} {line1}
+                      {azukiNumber} {" • "} {line1}
                     </Text>
                     
                     {/* Second Line of Traits (if needed) */}
@@ -1595,7 +1595,7 @@ export const LayeredCard3D = ({
                       fontWeight="bold"
                       letterSpacing={0.004}
                     >
-                      {azukiNumber} {'\u2022'} {line1}
+                      {azukiNumber} {" • "} {line1}
                     </Text>
                     
                     {/* Second Line of Traits (if needed) */}
