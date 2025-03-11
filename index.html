@@ -7,6 +7,102 @@
     <meta name="description" content="Generate Azuki NFT trading cards with AI-generated full art" />
     <title>Azuki TCG Generator</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Runtime patch for axios isFormData function -->
+    <script>
+      window.addEventListener('DOMContentLoaded', function() {
+        // Fix for "Unexpected token ')'" error in axios
+        var fixIsFormData = function() {
+          try {
+            // Create a working version of the problematic function
+            var fixedIsFormData = function(thing) {
+              return Boolean(
+                thing && 
+                (typeof FormData !== 'undefined' && thing instanceof FormData ||
+                  typeof thing === 'object' && 
+                  typeof thing.toString === 'function' && 
+                  thing.toString() === '[object FormData]')
+              );
+            };
+
+            // Create a patch script to directly fix the axios code
+            var script = document.createElement('script');
+            script.textContent = `
+              // Direct patch to fix the syntax error at index bundled JS
+              try {
+                // Find the problematic isFormData function in the document
+                var scripts = document.querySelectorAll('script[type="module"][crossorigin]');
+                scripts.forEach(function(script) {
+                  if (script.src.includes('index') && script.src.includes('.js')) {
+                    fetch(script.src)
+                      .then(response => response.text())
+                      .then(code => {
+                        // Check if the code contains the error pattern
+                        if (code.includes('kind === "object" && isFunction(thing.toString)') && 
+                            code.includes('[object FormData]"))')) {
+                          console.log('Found problematic axios code, applying patch...');
+                          
+                          // Fix the code
+                          var fixedCode = code.replace(
+                            /const isFormData = \\(thing\\) => \\{[\\s\\S]*?kind === "object" && isFunction\\(thing\\.toString\\) && thing\\.toString\\(\\) === "\\[object FormData\\]"\\)\\);[\\s\\S]*?\\};/,
+                            'const isFormData = (thing) => { return Boolean(thing && (typeof FormData !== "undefined" && thing instanceof FormData || typeof thing === "object" && isFunction(thing.toString) && thing.toString() === "[object FormData]")); };'
+                          );
+                          
+                          // Replace the script
+                          var newScript = document.createElement('script');
+                          newScript.type = 'module';
+                          newScript.crossOrigin = script.crossOrigin;
+                          newScript.textContent = fixedCode;
+                          
+                          // Replace the original script
+                          script.remove();
+                          document.head.appendChild(newScript);
+                          console.log('Axios isFormData function patched successfully');
+                        }
+                      })
+                      .catch(err => console.error('Error patching axios:', err));
+                  }
+                });
+
+                // Backup method: monkey patch window.axios if found
+                setTimeout(function() {
+                  var patchGlobalAxios = function() {
+                    Object.keys(window).forEach(function(key) {
+                      if (key === 'axios' || key.toLowerCase().includes('axios')) {
+                        var obj = window[key];
+                        if (obj && typeof obj === 'object') {
+                          if (typeof obj.isFormData === 'function') {
+                            obj.isFormData = ${fixedIsFormData.toString()};
+                            console.log('Patched global axios.isFormData');
+                          }
+                          if (obj.utils && typeof obj.utils.isFormData === 'function') {
+                            obj.utils.isFormData = ${fixedIsFormData.toString()};
+                            console.log('Patched global axios.utils.isFormData');
+                          }
+                        }
+                      }
+                    });
+                  };
+                  
+                  // Try multiple times to catch axios after it loads
+                  patchGlobalAxios();
+                  setTimeout(patchGlobalAxios, 100);
+                  setTimeout(patchGlobalAxios, 500);
+                  setTimeout(patchGlobalAxios, 2000);
+                }, 0);
+              } catch (e) {
+                console.error('Error in axios patch script:', e);
+              }
+            `;
+            document.head.appendChild(script);
+          } catch (e) {
+            console.error('Error setting up axios patch:', e);
+          }
+        };
+        
+        // Run immediately
+        fixIsFormData();
+      });
+    </script>
   </head>
   <body>
     <div id="root"></div>
