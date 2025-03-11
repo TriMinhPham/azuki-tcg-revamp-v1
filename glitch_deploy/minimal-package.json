@@ -1,0 +1,15 @@
+{
+  "name": "azuki-tcg-minimal",
+  "version": "1.0.0",
+  "description": "Minimal server for Azuki TCG on Glitch",
+  "main": "minimal-server.js",
+  "scripts": {
+    "start": "node minimal-server.js"
+  },
+  "engines": {
+    "node": "10.x"
+  },
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}

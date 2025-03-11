@@ -1,0 +1,12 @@
+{
+  "install": "cp minimal-package.json package.json && npm install",
+  "start": "node minimal-server.js",
+  "watch": {
+    "throttle": 1000,
+    "restart": {
+      "include": [
+        "^minimal-server\\.js$"
+      ]
+    }
+  }
+}
