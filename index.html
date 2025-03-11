@@ -7,89 +7,140 @@
     <meta name="description" content="Generate Azuki NFT trading cards with AI-generated full art" />
     <title>Azuki TCG Generator</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
-    <!-- Runtime patch for axios isFormData function -->
+    <!-- Preemptive script fix that intercepts axios before it loads -->
     <script>
-      // Simple global patch for axios isFormData function
-      // This approach is more reliable and avoids dynamic script manipulation
-      window.addEventListener('load', function() {
-        try {
-          // Define the fixed isFormData function
-          function fixedIsFormData(thing) {
-            return Boolean(
-              thing && 
-              (typeof FormData !== 'undefined' && thing instanceof FormData ||
-                typeof thing === 'object' && 
-                typeof thing.toString === 'function' && 
-                thing.toString() === '[object FormData]')
-            );
-          }
+      // This runs immediately and intercepts script evaluation
+      (function() {
+        console.log('Installing preemptive axios syntax error fix');
+        
+        // 1. Intercept script loading to modify axios code before execution
+        const originalCreateElement = document.createElement;
+        document.createElement = function(tagName) {
+          const element = originalCreateElement.call(document, tagName);
           
-          // Handler to apply patch as soon as axios is detected
-          function tryPatchAxios() {
-            var axiosFound = false;
-            
-            // Try to patch global axios objects
-            Object.keys(window).forEach(function(key) {
-              if ((key === 'axios' || key.toLowerCase().includes('axios')) && window[key] && typeof window[key] === 'object') {
-                var obj = window[key];
-                
-                // Patch main isFormData function
-                if (typeof obj.isFormData === 'function') {
-                  obj.isFormData = fixedIsFormData;
-                  console.log('Patched axios.isFormData');
-                  axiosFound = true;
-                }
-                
-                // Patch utils.isFormData if it exists
-                if (obj.utils && typeof obj.utils.isFormData === 'function') {
-                  obj.utils.isFormData = fixedIsFormData;
-                  console.log('Patched axios.utils.isFormData');
-                  axiosFound = true;
-                }
-
-                // If we're dealing with the actual axios instance, set up interceptors
-                if (obj.interceptors && typeof obj.interceptors === 'object') {
-                  try {
-                    console.log('Adding axios interceptors for additional protection');
-                    // Add request interceptor to ensure any issues are caught
-                    obj.interceptors.request.use(function(config) {
-                      return config;
-                    }, function(error) {
-                      console.log('Axios request interceptor caught an error:', error);
-                      return Promise.reject(error);
-                    });
-                  } catch (e) {
-                    console.error('Error setting up axios interceptors:', e);
+          if (tagName.toLowerCase() === 'script') {
+            // Intercept script src setting
+            const originalSrcDescriptor = Object.getOwnPropertyDescriptor(HTMLScriptElement.prototype, 'src');
+            if (originalSrcDescriptor && originalSrcDescriptor.set) {
+              Object.defineProperty(element, 'src', {
+                set: function(value) {
+                  // Apply original setter
+                  originalSrcDescriptor.set.call(this, value);
+                  
+                  // If this appears to be our app's script
+                  if (value && (value.includes('index') || value.includes('vendor')) && value.endsWith('.js')) {
+                    console.log('Intercepting script load:', value);
+                    
+                    // Override the script's onload to patch the problematic code
+                    const originalOnload = this.onload;
+                    this.onload = function(event) {
+                      console.log('Script loaded, applying axios patch');
+                      fixAxiosGlobally();
+                      if (originalOnload) originalOnload.call(this, event);
+                    };
                   }
-                }
-              }
-            });
-            
-            return axiosFound;
+                },
+                get: originalSrcDescriptor.get,
+                configurable: true
+              });
+            }
           }
-
-          // Try to patch immediately
-          var patched = tryPatchAxios();
           
-          // If not patched yet, set up recurring checks
-          if (!patched) {
-            console.log('Axios not found yet, setting up recurring checks');
-            var patchInterval = setInterval(function() {
-              if (tryPatchAxios()) {
-                console.log('Successfully patched axios');
-                clearInterval(patchInterval);
-              }
-            }, 100);
+          return element;
+        };
+        
+        // 2. Function to fix axios's FormData detection function
+        function fixAxiosGlobally() {
+          try {
+            // Create the correct implementation
+            function fixedIsFormData(thing) {
+              return Boolean(
+                thing && 
+                (typeof FormData !== 'undefined' && thing instanceof FormData ||
+                 typeof thing === 'object' && 
+                 typeof thing.toString === 'function' && 
+                 thing.toString() === '[object FormData]')
+              );
+            }
             
-            // Clear interval after 10 seconds as a safeguard
+            // Store original Object.defineProperty
+            const originalDefineProperty = Object.defineProperty;
+            
+            // Override to intercept axios definitions
+            Object.defineProperty = function(obj, prop, descriptor) {
+              // Check if this looks like the problematic axios isFormData function definition
+              if (
+                prop === 'isFormData' && 
+                descriptor && 
+                descriptor.value && 
+                typeof descriptor.value === 'function' && 
+                descriptor.value.toString().includes('kind ===')
+              ) {
+                console.log('Intercepted problematic axios isFormData function definition');
+                descriptor.value = fixedIsFormData;
+              }
+              
+              return originalDefineProperty.call(this, obj, prop, descriptor);
+            };
+            
+            // Direct patch of global axios instances
+            function patchAxiosInstance() {
+              Object.keys(window).forEach(function(key) {
+                try {
+                  const obj = window[key];
+                  if (obj && typeof obj === 'object') {
+                    // Direct isFormData patch
+                    if (typeof obj.isFormData === 'function') {
+                      obj.isFormData = fixedIsFormData;
+                    }
+                    
+                    // Utils isFormData patch
+                    if (obj.utils && typeof obj.utils.isFormData === 'function') {
+                      obj.utils.isFormData = fixedIsFormData;
+                    }
+                    
+                    // Also check for axios in properties
+                    if (obj.axios && typeof obj.axios === 'object') {
+                      if (typeof obj.axios.isFormData === 'function') {
+                        obj.axios.isFormData = fixedIsFormData;
+                      }
+                      if (obj.axios.utils && typeof obj.axios.utils.isFormData === 'function') {
+                        obj.axios.utils.isFormData = fixedIsFormData;
+                      }
+                    }
+                  }
+                } catch (e) {
+                  // Skip inaccessible objects
+                }
+              });
+            }
+            
+            // Run the patch immediately and periodically
+            patchAxiosInstance();
+            const interval = setInterval(patchAxiosInstance, 500);
             setTimeout(function() {
-              clearInterval(patchInterval);
+              clearInterval(interval);
             }, 10000);
+          } catch (e) {
+            console.error('Error installing axios fix:', e);
           }
-        } catch (e) {
-          console.error('Error in axios patch:', e);
         }
-      });
+        
+        // 3. Also install an error handler to catch syntax errors and fix them
+        window.addEventListener('error', function(event) {
+          // Check if this is the axios syntax error we're looking for
+          if (event && event.error && event.error.message && 
+              (event.error.message.includes('Unexpected token') || 
+               event.error.message.includes('SyntaxError'))) {
+              
+            console.log('Caught potential axios syntax error:', event.error.message);
+            fixAxiosGlobally();
+          }
+        }, true);
+        
+        // 4. Run an immediate global fix
+        setTimeout(fixAxiosGlobally, 0);
+      })();
     </script>
   </head>
   <body>

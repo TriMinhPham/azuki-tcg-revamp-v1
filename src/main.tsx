@@ -27,7 +27,7 @@ declare global {
 window.THREE = THREE;
 
 // Fix the axios isFormData function that causes syntax error
-// This overwrites the problematic function before the app starts
+// This is a more direct approach that modifies the core of axios
 window.fixAxiosFormData = function() {
   // Define a fixed isFormData function to replace the problematic one
   const fixedIsFormData = function(thing: any) {
@@ -40,48 +40,106 @@ window.fixAxiosFormData = function() {
     );
   };
 
-  // Add script element to fix axios at runtime
-  const script = document.createElement('script');
-  script.textContent = `
-    // Find and fix the problematic isFormData function
-    (function() {
-      try {
-        // This script runs in browser context to access global objects and fix the axios issue
-        setTimeout(function() {
-          // Find all global objects that match axios pattern
-          Object.keys(window).forEach(function(key) {
-            try {
-              // Skip certain objects
-              if (key === 'window' || key === 'document') return;
-              
-              var obj = window[key];
-              // Check if this might be axios or has axios within it
-              if (obj && typeof obj === 'object') {
-                // Fix direct exports
-                if (typeof obj.isFormData === 'function' && 
-                    obj.isFormData.toString().includes('kind === "object"')) {
-                  console.log('Fixed axios isFormData in window.' + key);
-                  obj.isFormData = ${fixedIsFormData.toString()};
-                }
+  try {
+    // 1. Direct approach - monkey patch axios module system
+    // This will handle the issue at its root by patching the module system
+    // Create a script that will execute in the global context
+    const script = document.createElement('script');
+    script.textContent = `
+      (function() {
+        // Store the original define property method
+        var originalDefineProperty = Object.defineProperty;
+        
+        // Override defineProperty to intercept axios module definition
+        Object.defineProperty = function(obj, prop, descriptor) {
+          // Check if this is the problematic axios isFormData function
+          if (
+            obj && 
+            typeof obj === 'object' && 
+            prop === 'isFormData' && 
+            descriptor && 
+            descriptor.value && 
+            typeof descriptor.value === 'function' && 
+            descriptor.value.toString().includes('kind ===')
+          ) {
+            console.log('Intercepted axios isFormData definition');
+            
+            // Replace with our fixed implementation
+            descriptor.value = function(thing) {
+              return Boolean(
+                thing && 
+                (typeof FormData !== 'undefined' && thing instanceof FormData ||
+                  typeof thing === 'object' && 
+                  typeof thing.toString === 'function' && 
+                  thing.toString() === '[object FormData]')
+              );
+            };
+          }
+          
+          return originalDefineProperty.call(this, obj, prop, descriptor);
+        };
+        
+        console.log('Installed Object.defineProperty interceptor for axios');
+
+        // 2. Also patch existing instances
+        function patchExistingAxios() {
+          try {
+            // Look for axios in the global scope
+            Object.keys(window).forEach(function(key) {
+              try {
+                if (key === 'window' || key === 'document') return;
                 
-                // Fix utils/helpers
-                if (obj.utils && typeof obj.utils.isFormData === 'function' &&
-                    obj.utils.isFormData.toString().includes('kind === "object"')) {
-                  console.log('Fixed axios utils.isFormData in window.' + key);
-                  obj.utils.isFormData = ${fixedIsFormData.toString()};
+                var obj = window[key];
+                if (obj && typeof obj === 'object') {
+                  // Check for axios signature
+                  if (typeof obj.isFormData === 'function') {
+                    console.log('Patched window.' + key + '.isFormData');
+                    obj.isFormData = function(thing) {
+                      return Boolean(
+                        thing && 
+                        (typeof FormData !== 'undefined' && thing instanceof FormData ||
+                          typeof thing === 'object' && 
+                          typeof thing.toString === 'function' && 
+                          thing.toString() === '[object FormData]')
+                      );
+                    };
+                  }
+                  
+                  if (obj.utils && typeof obj.utils.isFormData === 'function') {
+                    console.log('Patched window.' + key + '.utils.isFormData');
+                    obj.utils.isFormData = function(thing) {
+                      return Boolean(
+                        thing && 
+                        (typeof FormData !== 'undefined' && thing instanceof FormData ||
+                          typeof thing === 'object' && 
+                          typeof thing.toString === 'function' && 
+                          thing.toString() === '[object FormData]')
+                      );
+                    };
+                  }
                 }
+              } catch(e) {
+                // Ignore errors from inaccessible properties
               }
-            } catch(e) {
-              // Ignore errors from accessing some properties
-            }
-          });
-        }, 0);
-      } catch(e) {
-        console.error('Error in fixAxios script:', e);
-      }
-    })();
-  `;
-  document.head.appendChild(script);
+            });
+          } catch(e) {
+            console.error('Error patching existing axios:', e);
+          }
+        }
+
+        // Run immediately and set up recurring checks
+        patchExistingAxios();
+        setInterval(patchExistingAxios, 500);
+        setTimeout(function() { clearInterval(patchExistingAxios); }, 10000);
+      })();
+    `;
+    
+    // Add to head immediately
+    document.head.appendChild(script);
+    console.log('Installed axios patch script');
+  } catch(e) {
+    console.error('Error setting up axios patch:', e);
+  }
 };
 
 // Run fix immediately
