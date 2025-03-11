@@ -1249,7 +1249,7 @@ export const LayeredCard3D = ({
                 };
                 
                 const traitValues = extractTraitValues(cardData.traits || "Human, Samurai, Rare");
-                const formattedTraits = traitValues.split(', ').join(' • '); // Join with bullet points
+                const formattedTraits = traitValues.split(', ').join(' \u2022 '); // Join with bullet points
                 
                 // Extract Azuki number from traits string (format: "Azuki #123 - traits...")
                 const azukiNumberMatch = cardData.traits && cardData.traits.match(/Azuki #(\d+)/);
@@ -1277,7 +1277,7 @@ export const LayeredCard3D = ({
                   
                   // Find the last bullet point that would still fit on line 1
                   while (true) {
-                    const nextBullet = formattedTraits.indexOf(' • ', lastBullet + 1);
+                    const nextBullet = formattedTraits.indexOf(' \u2022 ', lastBullet + 1);
                     if (nextBullet === -1 || nextBullet > availableChars) {
                       break;
                     }
@@ -1520,7 +1520,7 @@ export const LayeredCard3D = ({
                 };
                 
                 const traitValues = extractTraitValues(cardData.traits || "Human, Samurai, Rare");
-                const formattedTraits = traitValues.split(', ').join(' • '); // Join with bullet points
+                const formattedTraits = traitValues.split(', ').join(' \u2022 '); // Join with bullet points
                 
                 // Extract Azuki number from traits string (format: "Azuki #123 - traits...")
                 const azukiNumberMatch = cardData.traits && cardData.traits.match(/Azuki #(\d+)/);
@@ -1548,7 +1548,7 @@ export const LayeredCard3D = ({
                   
                   // Find the last bullet point that would still fit on line 1
                   while (true) {
-                    const nextBullet = formattedTraits.indexOf(' • ', lastBullet + 1);
+                    const nextBullet = formattedTraits.indexOf(' \u2022 ', lastBullet + 1);
                     if (nextBullet === -1 || nextBullet > availableChars) {
                       break;
                     }
