@@ -1,5 +1,5 @@
 {
-  "install": "npm install",
+  "install": "npm install --no-package-lock",
   "start": "node server.js",
   "watch": {
     "throttle": 1000,
@@ -8,5 +8,8 @@
         "^server\\.js$"
       ]
     }
+  },
+  "engines": {
+    "node": "18.x"
   }
 }
