@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "A more optimized Azuki TCG Generator for Glitch",
   "scripts": {
-    "start": "node server.js"
+    "start": "node simple-server.js",
+    "start:full": "node server.js"
   },
   "engines": {
     "node": "10.x"
@@ -22,7 +23,9 @@
     "cors": "^2.8.5",
     "dotenv": "^8.6.0",
     "express": "^4.17.3",
-    "node-fetch": "^2.6.7",
-    "sharp": "^0.29.3"
+    "node-fetch": "^2.6.7"
+  },
+  "optionalDependencies": {
+    "sharp": "^0.25.4"
   }
 }
