@@ -2,6 +2,7 @@
 const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
+const fixThreeShaders = require('./three-shader-fix');
 
 console.log('Starting custom Vercel build script...');
 
@@ -9,6 +10,16 @@ console.log('Starting custom Vercel build script...');
 process.env.NODE_ENV = 'production';
 process.env.VITE_APP_ENV = 'production';
 process.env.BROWSERSLIST_ENV = 'production';
+
+// Apply Three.js shader fixes before building
+try {
+  console.log('Applying Three.js shader fixes...');
+  fixThreeShaders();
+  console.log('Shader fixes applied successfully!');
+} catch (error) {
+  console.error('Error applying shader fixes:', error);
+  console.log('Continuing with build anyway...');
+}
 
 // Run the build command
 try {
