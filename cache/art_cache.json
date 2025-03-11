@@ -135,14 +135,14 @@
     "fullArtProcessing": false,
     "generator": "midjourney",
     "debugEndpoint": "/api/debug/image/1834",
-    "timestamp": "2025-03-11T11:20:33.657Z",
-    "processStartTime": "2025-03-11T11:20:33.656Z",
+    "timestamp": "2025-03-11T12:14:31.153Z",
+    "processStartTime": "2025-03-11T12:14:31.153Z",
     "tokenId": "1834",
     "isV2Api": true,
-    "created": "2025-03-11T11:20:33.657Z",
+    "created": "2025-03-11T12:14:31.153Z",
     "debugInfo": {
       "generationDetails": {
-        "generationTime": "2025-03-11T11:20:33.657Z",
+        "generationTime": "2025-03-11T12:14:31.153Z",
         "usedTemporaryUrls": false,
         "isV2Api": true
       }
@@ -9858,5 +9858,245 @@
     "tokenId": "1834",
     "isV2Api": true,
     "created": "2025-03-11T11:20:33.657Z"
+  },
+  "1834_v1_2025-03-11T120737048Z": {
+    "success": true,
+    "nftImage": "https://ipfs.io/ipfs/QmYDvPAXtiJg7s8JdRBSLWdgSphQdac8j1YuQNNxcGE1hg/1834.png",
+    "nftTraits": [
+      {
+        "trait_type": "Type",
+        "display_type": null,
+        "max_value": null,
+        "value": "Human"
+      },
+      {
+        "trait_type": "Eyes",
+        "display_type": null,
+        "max_value": null,
+        "value": "Ruby"
+      },
+      {
+        "trait_type": "Mouth",
+        "display_type": null,
+        "max_value": null,
+        "value": "Face Mask"
+      },
+      {
+        "trait_type": "Hair",
+        "display_type": null,
+        "max_value": null,
+        "value": "Teal Hairband"
+      },
+      {
+        "trait_type": "Clothing",
+        "display_type": null,
+        "max_value": null,
+        "value": "Dress Shirt"
+      }
+    ],
+    "identifier": "1834",
+    "cardDetails": {
+      "cardName": "Teal Masquerader",
+      "typeIcon": "🫘",
+      "hp": "100 HP",
+      "move": {
+        "name": "Silent Gaze",
+        "atk": "30"
+      },
+      "weakness": "⚡ x2",
+      "resistance": "🪨 -20",
+      "retreatCost": "🌟",
+      "rarity": "★★"
+    },
+    "description": "Female, short hair with teal hues and a teal hairband, ruby eyes, face covered with a black mask, outfit consists of a beige dress shirt over a brown tie, no visible weapons, off-white background.",
+    "cardColor": "#ff5722",
+    "fullArtProcessing": false,
+    "generator": "midjourney",
+    "debugEndpoint": "/api/debug/image/1834",
+    "timestamp": "2025-03-11T12:07:37.048Z",
+    "processStartTime": "2025-03-11T12:07:37.048Z",
+    "tokenId": "1834",
+    "isV2Api": true,
+    "created": "2025-03-11T12:07:37.048Z"
+  },
+  "1834_v1_2025-03-11T120737310Z": {
+    "success": true,
+    "nftImage": "https://ipfs.io/ipfs/QmYDvPAXtiJg7s8JdRBSLWdgSphQdac8j1YuQNNxcGE1hg/1834.png",
+    "nftTraits": [
+      {
+        "trait_type": "Type",
+        "display_type": null,
+        "max_value": null,
+        "value": "Human"
+      },
+      {
+        "trait_type": "Eyes",
+        "display_type": null,
+        "max_value": null,
+        "value": "Ruby"
+      },
+      {
+        "trait_type": "Mouth",
+        "display_type": null,
+        "max_value": null,
+        "value": "Face Mask"
+      },
+      {
+        "trait_type": "Hair",
+        "display_type": null,
+        "max_value": null,
+        "value": "Teal Hairband"
+      },
+      {
+        "trait_type": "Clothing",
+        "display_type": null,
+        "max_value": null,
+        "value": "Dress Shirt"
+      }
+    ],
+    "identifier": "1834",
+    "cardDetails": {
+      "cardName": "Teal Masquerader",
+      "typeIcon": "🫘",
+      "hp": "100 HP",
+      "move": {
+        "name": "Silent Gaze",
+        "atk": "30"
+      },
+      "weakness": "⚡ x2",
+      "resistance": "🪨 -20",
+      "retreatCost": "🌟",
+      "rarity": "★★"
+    },
+    "description": "Female, short hair with teal hues and a teal hairband, ruby eyes, face covered with a black mask, outfit consists of a beige dress shirt over a brown tie, no visible weapons, off-white background.",
+    "cardColor": "#ff5722",
+    "fullArtProcessing": false,
+    "generator": "midjourney",
+    "debugEndpoint": "/api/debug/image/1834",
+    "timestamp": "2025-03-11T12:07:37.310Z",
+    "processStartTime": "2025-03-11T12:07:37.310Z",
+    "tokenId": "1834",
+    "isV2Api": true,
+    "created": "2025-03-11T12:07:37.310Z"
+  },
+  "1834_v1_2025-03-11T121430684Z": {
+    "success": true,
+    "nftImage": "https://ipfs.io/ipfs/QmYDvPAXtiJg7s8JdRBSLWdgSphQdac8j1YuQNNxcGE1hg/1834.png",
+    "nftTraits": [
+      {
+        "trait_type": "Type",
+        "display_type": null,
+        "max_value": null,
+        "value": "Human"
+      },
+      {
+        "trait_type": "Eyes",
+        "display_type": null,
+        "max_value": null,
+        "value": "Ruby"
+      },
+      {
+        "trait_type": "Mouth",
+        "display_type": null,
+        "max_value": null,
+        "value": "Face Mask"
+      },
+      {
+        "trait_type": "Hair",
+        "display_type": null,
+        "max_value": null,
+        "value": "Teal Hairband"
+      },
+      {
+        "trait_type": "Clothing",
+        "display_type": null,
+        "max_value": null,
+        "value": "Dress Shirt"
+      }
+    ],
+    "identifier": "1834",
+    "cardDetails": {
+      "cardName": "Teal Masquerader",
+      "typeIcon": "🫘",
+      "hp": "100 HP",
+      "move": {
+        "name": "Silent Gaze",
+        "atk": "30"
+      },
+      "weakness": "⚡ x2",
+      "resistance": "🪨 -20",
+      "retreatCost": "🌟",
+      "rarity": "★★"
+    },
+    "description": "Female, short hair with teal hues and a teal hairband, ruby eyes, face covered with a black mask, outfit consists of a beige dress shirt over a brown tie, no visible weapons, off-white background.",
+    "cardColor": "#ff5722",
+    "fullArtProcessing": false,
+    "generator": "midjourney",
+    "debugEndpoint": "/api/debug/image/1834",
+    "timestamp": "2025-03-11T12:14:30.684Z",
+    "processStartTime": "2025-03-11T12:14:30.684Z",
+    "tokenId": "1834",
+    "isV2Api": true,
+    "created": "2025-03-11T12:14:30.684Z"
+  },
+  "1834_v1_2025-03-11T121431153Z": {
+    "success": true,
+    "nftImage": "https://ipfs.io/ipfs/QmYDvPAXtiJg7s8JdRBSLWdgSphQdac8j1YuQNNxcGE1hg/1834.png",
+    "nftTraits": [
+      {
+        "trait_type": "Type",
+        "display_type": null,
+        "max_value": null,
+        "value": "Human"
+      },
+      {
+        "trait_type": "Eyes",
+        "display_type": null,
+        "max_value": null,
+        "value": "Ruby"
+      },
+      {
+        "trait_type": "Mouth",
+        "display_type": null,
+        "max_value": null,
+        "value": "Face Mask"
+      },
+      {
+        "trait_type": "Hair",
+        "display_type": null,
+        "max_value": null,
+        "value": "Teal Hairband"
+      },
+      {
+        "trait_type": "Clothing",
+        "display_type": null,
+        "max_value": null,
+        "value": "Dress Shirt"
+      }
+    ],
+    "identifier": "1834",
+    "cardDetails": {
+      "cardName": "Teal Masquerader",
+      "typeIcon": "🫘",
+      "hp": "100 HP",
+      "move": {
+        "name": "Silent Gaze",
+        "atk": "30"
+      },
+      "weakness": "⚡ x2",
+      "resistance": "🪨 -20",
+      "retreatCost": "🌟",
+      "rarity": "★★"
+    },
+    "description": "Female, short hair with teal hues and a teal hairband, ruby eyes, face covered with a black mask, outfit consists of a beige dress shirt over a brown tie, no visible weapons, off-white background.",
+    "cardColor": "#ff5722",
+    "fullArtProcessing": false,
+    "generator": "midjourney",
+    "debugEndpoint": "/api/debug/image/1834",
+    "timestamp": "2025-03-11T12:14:31.153Z",
+    "processStartTime": "2025-03-11T12:14:31.153Z",
+    "tokenId": "1834",
+    "isV2Api": true,
+    "created": "2025-03-11T12:14:31.153Z"
   }
 }
