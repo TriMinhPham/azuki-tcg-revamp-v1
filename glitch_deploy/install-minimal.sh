@@ -8,6 +8,9 @@ echo "Installing minimal server compatible with Node.js 10..."
 cp minimal-package.json package.json
 cp minimal-glitch.json glitch.json
 
+# Fix the index.html file to avoid infinite redirect
+cp minimal-index.html public/index.html
+
 # Install dependencies
 npm install
 

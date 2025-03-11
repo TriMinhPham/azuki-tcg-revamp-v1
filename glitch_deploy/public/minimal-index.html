@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azuki TCG Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+            color: #333;
+        }
+        h1 {
+            color: #E91E63;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .card {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .button {
+            display: inline-block;
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 16px;
+        }
+        .button:hover {
+            background-color: #45a049;
+        }
+        footer {
+            margin-top: 40px;
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Azuki TCG Generator</h1>
+    
+    <div class="card">
+        <h2>Welcome to Azuki TCG Generator</h2>
+        <p>This application allows you to generate Trading Card Game cards based on Azuki NFTs.</p>
+        <p>The server is currently running in minimal mode to ensure compatibility with Glitch.</p>
+        <p><a href="/test.html" class="button">Go to Test Page</a></p>
+    </div>
+    
+    <div class="card">
+        <h2>API Status</h2>
+        <div id="apiStatus">Checking API status...</div>
+        <button class="button" id="checkApi">Check API</button>
+    </div>
+    
+    <footer>
+        <p>Azuki TCG Generator - Version 1.0.0</p>
+    </footer>
+
+    <script>
+        // Check API status when page loads
+        window.addEventListener('DOMContentLoaded', checkApiStatus);
+        
+        // Also check when button is clicked
+        document.getElementById('checkApi').addEventListener('click', checkApiStatus);
+        
+        function checkApiStatus() {
+            const statusDiv = document.getElementById('apiStatus');
+            statusDiv.innerHTML = 'Checking API status...';
+            
+            fetch('/api/health')
+                .then(response => response.json())
+                .then(data => {
+                    statusDiv.innerHTML = `
+                        <p>Status: <strong>${data.status}</strong></p>
+                        <p>Node Version: ${data.nodeVersion}</p>
+                        <p>Last checked: ${new Date(data.timestamp).toLocaleString()}</p>
+                    `;
+                })
+                .catch(error => {
+                    statusDiv.innerHTML = `<p>Error: ${error.message}</p>`;
+                });
+        }
+    </script>
+</body>
+</html>
