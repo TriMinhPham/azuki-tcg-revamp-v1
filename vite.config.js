@@ -20,32 +20,25 @@ export default defineConfig({
     },
   },
   build: {
-    target: 'es2020',
-    minify: 'terser',
-    terserOptions: {
-      compress: {
-        drop_console: process.env.NODE_ENV === 'production',
-        drop_debugger: true
-      }
-    },
+    target: 'es2019', // Even more conservative target for better browser support
+    minify: 'esbuild', // Try esbuild instead of terser
     sourcemap: false,
-    // Optimize chunk size with aggressive splitting
+    // Optimize chunk size with less aggressive splitting
     rollupOptions: {
       output: {
         manualChunks: {
           'vendor': [
             'react', 
             'react-dom', 
-            'react-router-dom'
-          ],
-          'three-core': ['three'],
-          'three-fiber': [
+            'react-router-dom',
+            // Include Three.js in the vendor bundle to avoid separate chunking
+            'three',
             '@react-three/fiber', 
             '@react-three/drei'
-          ],
+          ]
         },
-        // Optimize chunk size with more aggressive splitting
-        chunkSizeWarningLimit: 600,
+        // Optimize chunk size with more reasonable limits
+        chunkSizeWarningLimit: 1000,
         entryFileNames: 'assets/[name].[hash].js',
         chunkFileNames: 'assets/[name].[hash].js',
         assetFileNames: 'assets/[name].[hash].[ext]'
@@ -57,15 +50,20 @@ export default defineConfig({
     reportCompressedSize: false, // Speeds up build
   },
   optimizeDeps: {
-    include: ['three'],
+    include: [
+      'three', 
+      '@react-three/fiber', 
+      '@react-three/drei',
+      'react',
+      'react-dom',
+      'react-router-dom'
+    ],
     exclude: []
   },
   esbuild: {
-    pure: process.env.NODE_ENV === 'production' ? [
-      'console.log', 
-      'console.info', 
-      'console.debug', 
-      'console.trace'
-    ] : [],
+    // Disable code elimination since it can cause issues
+    pure: [],
+    // Use a more conservative JS target
+    target: 'es2019'
   }
 });
