@@ -1,5 +1,5 @@
 const express = require("express");
-const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
+const fetch = require("node-fetch");
 const fsSync = require("fs");
 const fs = require("fs").promises;
 const path = require("path");
