@@ -71,11 +71,27 @@
                         var obj = window[key];
                         if (obj && typeof obj === 'object') {
                           if (typeof obj.isFormData === 'function') {
-                            obj.isFormData = ${fixedIsFormData.toString()};
+                            obj.isFormData = function(thing) {
+                              return Boolean(
+                                thing && 
+                                (typeof FormData !== 'undefined' && thing instanceof FormData ||
+                                  typeof thing === 'object' && 
+                                  typeof thing.toString === 'function' && 
+                                  thing.toString() === '[object FormData]')
+                              );
+                            };
                             console.log('Patched global axios.isFormData');
                           }
                           if (obj.utils && typeof obj.utils.isFormData === 'function') {
-                            obj.utils.isFormData = ${fixedIsFormData.toString()};
+                            obj.utils.isFormData = function(thing) {
+                              return Boolean(
+                                thing && 
+                                (typeof FormData !== 'undefined' && thing instanceof FormData ||
+                                  typeof thing === 'object' && 
+                                  typeof thing.toString === 'function' && 
+                                  thing.toString() === '[object FormData]')
+                              );
+                            };
                             console.log('Patched global axios.utils.isFormData');
                           }
                         }
