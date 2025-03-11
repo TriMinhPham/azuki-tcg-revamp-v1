@@ -494,7 +494,7 @@ export const Card3D = ({
         pointTexture: { value: new THREE.TextureLoader().load('/textures/particle.png') },
         cardType: { value: new THREE.Color(baseR, baseG, baseB) }
       },
-      vertexShader: `
+      vertexShader: /* glsl */`
         attribute float size;
         attribute float speed;
         attribute float offset;
@@ -547,7 +547,7 @@ export const Card3D = ({
           gl_Position = projectionMatrix * mvPosition;
         }
       `,
-      fragmentShader: `
+      fragmentShader: /* glsl */`
         uniform sampler2D pointTexture;
         uniform float time;
         uniform vec3 cardType;

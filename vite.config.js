@@ -2,9 +2,13 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react-swc';
 import { resolve } from 'path';
+import glslPlugin from './glsl-plugin';
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+    glslPlugin()
+  ],
   resolve: {
     alias: {
       '@': resolve(__dirname, 'src'),
@@ -20,9 +24,10 @@ export default defineConfig({
     },
   },
   build: {
-    target: 'es2019', // Even more conservative target for better browser support
-    minify: 'esbuild', // Try esbuild instead of terser
-    sourcemap: false,
+    target: 'es2015', // Even more conservative target for maximum browser support
+    minify: false, // Disable minification entirely for debugging
+    sourcemap: true, // Enable sourcemaps for debugging
+    // Disable minification for GLSL code
     // Optimize chunk size with less aggressive splitting
     rollupOptions: {
       output: {
@@ -45,7 +50,7 @@ export default defineConfig({
       },
     },
     // Reduce bundle size with tree shaking
-    assetsInlineLimit: 4096, // 4kb - smaller assets are inlined
+    assetsInlineLimit: 0, // Don't inline assets to avoid GLSL processing issues
     cssCodeSplit: true,
     reportCompressedSize: false, // Speeds up build
   },

@@ -124,7 +124,7 @@ export function createHolographicMaterial(options: {
   baseColor?: THREE.Color;
   holoIntensity?: number;
 } = {}): THREE.ShaderMaterial {
-  const vertexShader = `
+  const vertexShader = /* glsl */`
     varying vec2 vUv;
     varying vec3 vPosition;
     varying vec3 vViewPosition;
@@ -142,7 +142,7 @@ export function createHolographicMaterial(options: {
     }
   `;
   
-  const fragmentShader = `
+  const fragmentShader = /* glsl */`
     uniform float time;
     uniform sampler2D holoTexture;
     uniform sampler2D rainbowTexture;
