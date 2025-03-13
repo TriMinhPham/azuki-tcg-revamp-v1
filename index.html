@@ -164,16 +164,10 @@
         document.head.appendChild(fixScript);
       })();
     </script>
-    <!-- Additional shader fix script that runs after scripts are loaded -->
+    <!-- Simple placeholder for shader-fix.js which will be added at build time -->
     <script>
-      // Create a global THREE object placeholder if not present to avoid errors
+      // Ensure THREE object exists
       window.THREE = window.THREE || {};
-      
-      // Convert GLSL keywords to string literals at runtime to prevent syntax errors
-      ['vec2', 'vec3', 'vec4', 'mat2', 'mat3', 'mat4', 'sampler2D'].forEach(function(keyword) {
-        // Create a variable with the same name to make the parser happy
-        window[keyword] = '"' + keyword + '"';
-      });
     </script>
   </head>
   <body>

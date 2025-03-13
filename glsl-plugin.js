@@ -7,15 +7,17 @@ module.exports = function glslPlugin() {
     
     // Process files during the build
     transform(code, id) {
+      // Skip node_modules/three to avoid breaking Three.js
+      if (id.includes('node_modules/three')) {
+        return null;
+      }
+      
       // Only process GLSL files and JS files that might contain shader code
       const isShaderFile = /\.(glsl|vert|frag)$/.test(id);
       const mightContainShaders = id.includes('shader') || 
-                                 id.includes('three') || 
                                  id.toLowerCase().includes('material') ||
                                  code.includes('glsl') || 
-                                 code.includes('shader') ||
-                                 code.includes('vert') ||
-                                 code.includes('frag');
+                                 code.includes('shader');
       
       if (!isShaderFile && !mightContainShaders) {
         return null;
@@ -35,31 +37,12 @@ module.exports = function glslPlugin() {
       try {
         let processedCode = code;
 
-        // First safely handle quoted GLSL code and prevent it from being treated as identifiers
-        processedCode = processedCode
-          // Replace standalone GLSL types with quoted strings to prevent syntax errors
-          .replace(/\bvec2\b(?!\s*[\w\.])/g, '"vec2"')
-          .replace(/\bvec3\b(?!\s*[\w\.])/g, '"vec3"')
-          .replace(/\bvec4\b(?!\s*[\w\.])/g, '"vec4"')
-          .replace(/\bmat2\b(?!\s*[\w\.])/g, '"mat2"')
-          .replace(/\bmat3\b(?!\s*[\w\.])/g, '"mat3"')
-          .replace(/\bmat4\b(?!\s*[\w\.])/g, '"mat4"')
-          .replace(/\bsampler2D\b(?!\s*[\w\.])/g, '"sampler2D"')
-          .replace(/\buniform\b(?!\s*[\w\.])/g, '"uniform"')
-          .replace(/\bvarying\b(?!\s*[\w\.])/g, '"varying"')
-          .replace(/\battribute\b(?!\s*[\w\.])/g, '"attribute"');
-        
-        // Fix template literals - ensure GLSL shader inside template literals is handled
+        // Fix template literals with glsl or shader tags
         processedCode = processedCode
           .replace(/(glsl|shader)`([\s\S]*?)`/g, function(match, type, content) {
             // Process the content to escape any template expressions
             const escapedContent = content
-              .replace(/\${/g, '\\${')  // Escape template expressions
-              .replace(/\bvec2\b(?!\s*[\w\.])/g, "'vec2'")  // Quote GLSL keywords
-              .replace(/\bvec3\b(?!\s*[\w\.])/g, "'vec3'")
-              .replace(/\bvec4\b(?!\s*[\w\.])/g, "'vec4'")
-              .replace(/\bmat4\b(?!\s*[\w\.])/g, "'mat4'")
-              .replace(/\bsampler2D\b(?!\s*[\w\.])/g, "'sampler2D'");
+              .replace(/\${/g, '\\${');  // Escape template expressions
             
             // Return the processed template literal
             return `\`${escapedContent}\``;
