@@ -1,47 +1,56 @@
-// Enhanced Vercel serverless function handler for all API routes
+// Simple API handler that doesn't use server-export.js to avoid dependency issues
 const express = require('express');
 const serverless = require('serverless-http');
-
-// Import the enhanced router from the export file that contains all API functions
-const apiRouter = require('../server-export');
 
 // Create Express app
 const app = express();
 
-// Add basic request logging middleware
+// Log all requests
 app.use((req, res, next) => {
   console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
   next();
 });
 
-// Use the API router for all requests
-app.use('/', apiRouter);
+// Simple JSON parsing middleware
+app.use(express.json());
 
-// Add a fallback route handler for any unmatched routes
+// Add CORS headers
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+  
+  next();
+});
+
+// Test route that always works
+app.get('/api/test', (req, res) => {
+  res.json({
+    success: true,
+    message: 'API is working on Vercel',
+    timestamp: new Date().toISOString(),
+    environment: process.env.VERCEL ? 'vercel' : 'development',
+    path: req.path
+  });
+});
+
+// Main route handler for all other paths
 app.use('*', (req, res) => {
-  res.status(404).json({
-    success: false,
-    error: "API endpoint not found",
-    path: req.originalUrl,
-    availableEndpoints: [
-      "/api/health", 
-      "/api/test",
-      "/api/test-goapi"
-    ]
+  // Return info about the request but avoid any complex dependencies
+  res.json({
+    success: true,
+    info: "Vercel API endpoint is working",
+    path: req.originalUrl || req.url,
+    method: req.method,
+    timestamp: new Date().toISOString(),
+    headers: req.headers,
+    message: "This is a simplified handler to diagnose Vercel deployment issues"
   });
 });
 
-// Add error handling middleware
-app.use((err, req, res, next) => {
-  console.error("Server error:", err);
-  res.status(500).json({
-    success: false,
-    error: "Internal server error",
-    message: err.message
-  });
-});
-
-// Export the serverless handler
-module.exports = serverless(app, {
-  binary: ['image/png', 'image/jpeg', 'image/webp', 'application/octet-stream']
-});
+// Export the serverless handler with minimal options
+module.exports = serverless(app);
