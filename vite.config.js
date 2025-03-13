@@ -6,8 +6,41 @@ import glslPlugin from './glsl-plugin';
 
 export default defineConfig({
   plugins: [
-    react(),
-    glslPlugin()
+    react({
+      // Add additional configuration to prevent transformation issues
+      jsxImportSource: '@/jsx-runtime',
+      babel: {
+        plugins: [
+          // Preserve function names to avoid breaking patches
+          ['@babel/plugin-transform-function-name', { loose: true }]
+        ]
+      }
+    }),
+    glslPlugin(),
+    // Custom plugin to handle shader code directly in the final output
+    {
+      name: 'shader-post-process',
+      generateBundle(options, bundle) {
+        // Process all generated JS files
+        Object.keys(bundle).forEach(fileName => {
+          if (fileName.endsWith('.js')) {
+            const chunk = bundle[fileName];
+            if (chunk.type === 'chunk' && chunk.code) {
+              // Fix potential shader syntax issues in the final bundle
+              const fixedCode = chunk.code
+                .replace(/\bvec2\b(?!\s*[\w\.])/g, '"vec2"')
+                .replace(/\bvec3\b(?!\s*[\w\.])/g, '"vec3"')
+                .replace(/\bvec4\b(?!\s*[\w\.])/g, '"vec4"')
+                .replace(/\bmat2\b(?!\s*[\w\.])/g, '"mat2"')
+                .replace(/\bmat3\b(?!\s*[\w\.])/g, '"mat3"')
+                .replace(/\bmat4\b(?!\s*[\w\.])/g, '"mat4"');
+              
+              chunk.code = fixedCode;
+            }
+          }
+        });
+      }
+    }
   ],
   resolve: {
     alias: {

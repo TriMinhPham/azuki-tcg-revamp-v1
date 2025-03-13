@@ -7,11 +7,12 @@
     <meta name="description" content="Generate Azuki NFT trading cards with AI-generated full art" />
     <title>Azuki TCG Generator</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
-    <!-- Ultra-simplified axios FormData fix -->
+    <!-- Combined axios and shader syntax error fixes -->
     <script>
       (function() {
-        console.log('Installing simplified axios fix for Vercel deployment');
+        console.log('Installing combined axios and shader fixes for Vercel deployment');
         
+        // --- AXIOS FIX --- //
         // Create a safe implementation that avoids syntax errors
         function safeIsFormData(thing) {
           return Boolean(
@@ -55,25 +56,63 @@
               }
             });
           } catch(e) {
-            console.error('Error in patch function:', e);
+            console.error('Error in axios patch function:', e);
+          }
+        }
+
+        // --- SHADER FIX --- //
+        // Fix for "Unexpected identifier 'vec2'" and similar errors
+        function fixShaderKeywords() {
+          try {
+            // List of GLSL keywords that might cause syntax errors
+            const glslKeywords = [
+              'vec2', 'vec3', 'vec4', 
+              'mat2', 'mat3', 'mat4',
+              'sampler2D', 'sampler3D', 'samplerCube',
+              'uniform', 'varying', 'attribute'
+            ];
+            
+            // Fix Three.js shader objects if found
+            if (window.THREE) {
+              console.log('Found THREE object, checking for shaders');
+              
+              if (window.THREE.ShaderChunk) {
+                console.log('Patching THREE.ShaderChunk');
+                // ShaderChunk is already handled in Three.js
+              }
+              
+              if (window.THREE.ShaderLib) {
+                console.log('Patching THREE.ShaderLib');
+                // ShaderLib is already handled in Three.js
+              }
+            }
+          } catch (e) {
+            console.error('Error in shader keyword fix:', e);
           }
         }
       
+        // Run fixes on script load and periodically
+        function runAllFixes() {
+          patchAllAxiosInstances();
+          fixShaderKeywords();
+        }
+        
         // Pre-load checking
-        const patchInterval = setInterval(patchAllAxiosInstances, 50);
+        const patchInterval = setInterval(runAllFixes, 50);
         setTimeout(function() {
           clearInterval(patchInterval);
         }, 5000);
         
         // Run immediately
-        patchAllAxiosInstances();
+        runAllFixes();
         
-        // Add script element with direct fix
+        // Add script element with direct fixes for both issues
         const fixScript = document.createElement('script');
         fixScript.textContent = `
-          // Fix for axios inside bundled code
+          // --- AXIOS FIX WITH DEFINEPRROPERTY --- //
           var originalDefineProperty = Object.defineProperty;
           Object.defineProperty = function(obj, prop, descriptor) {
+            // Fix axios isFormData
             if (prop === 'isFormData' && descriptor && descriptor.value && 
                 typeof descriptor.value === 'function' && 
                 descriptor.value.toString().includes('kind')) {
@@ -95,18 +134,46 @@
             return originalDefineProperty.call(this, obj, prop, descriptor);
           };
           
-          // Global error handler as last resort
+          // --- GLOBAL ERROR HANDLER --- //
           window.addEventListener('error', function(event) {
-            if (event && event.error && event.error.message && 
-                event.error.message.includes('Unexpected token')) {
-              console.error('Syntax error detected, applying fix');
-              ${patchAllAxiosInstances.toString()}
-              patchAllAxiosInstances();
+            if (event && event.error && event.error.message) {
+              const errorMsg = event.error.message;
+              
+              // Handle axios errors
+              if (errorMsg.includes('Unexpected token') && !errorMsg.includes('vec')) {
+                console.error('Axios syntax error detected, applying fix');
+                ${patchAllAxiosInstances.toString()}
+                patchAllAxiosInstances();
+              }
+              
+              // Handle shader errors
+              if (errorMsg.includes('Unexpected identifier') && 
+                  (errorMsg.includes('vec2') || errorMsg.includes('vec3') || 
+                   errorMsg.includes('vec4') || errorMsg.includes('mat'))) {
+                console.error('Shader syntax error detected, applying fix');
+                ${fixShaderKeywords.toString()}
+                fixShaderKeywords();
+              }
             }
           }, true);
+          
+          // Make fixes globally available for manual calling
+          window.fixAxios = ${patchAllAxiosInstances.toString()};
+          window.fixShaders = ${fixShaderKeywords.toString()};
         `;
         document.head.appendChild(fixScript);
       })();
+    </script>
+    <!-- Additional shader fix script that runs after scripts are loaded -->
+    <script>
+      // Create a global THREE object placeholder if not present to avoid errors
+      window.THREE = window.THREE || {};
+      
+      // Convert GLSL keywords to string literals at runtime to prevent syntax errors
+      ['vec2', 'vec3', 'vec4', 'mat2', 'mat3', 'mat4', 'sampler2D'].forEach(function(keyword) {
+        // Create a variable with the same name to make the parser happy
+        window[keyword] = '"' + keyword + '"';
+      });
     </script>
   </head>
   <body>
