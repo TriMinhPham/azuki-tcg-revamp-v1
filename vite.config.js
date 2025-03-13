@@ -24,10 +24,16 @@ export default defineConfig({
     },
   },
   build: {
-    target: 'es2015', // Even more conservative target for maximum browser support
-    minify: false, // Disable minification entirely for debugging
+    target: 'es2015', // Conservative target for maximum browser support
+    minify: 'esbuild', // Use esbuild for safer minification
     sourcemap: true, // Enable sourcemaps for debugging
-    // Disable minification for GLSL code
+    // Configure minify options to avoid unsafe transformations
+    minifyOptions: {
+      syntax: true,
+      keep_fnames: true, // Preserve function names to avoid breaking fixes
+      ecma: 2015,
+      safari10: true
+    },
     // Optimize chunk size with less aggressive splitting
     rollupOptions: {
       output: {
@@ -36,11 +42,12 @@ export default defineConfig({
             'react', 
             'react-dom', 
             'react-router-dom',
-            // Include Three.js in the vendor bundle to avoid separate chunking
+            // Separate axios to allow easier patching
             'three',
             '@react-three/fiber', 
             '@react-three/drei'
-          ]
+          ],
+          'axios': ['axios'] // Isolate axios in its own chunk
         },
         // Optimize chunk size with more reasonable limits
         chunkSizeWarningLimit: 1000,
