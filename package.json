@@ -49,10 +49,7 @@
     "react-router-dom": "^7.3.0",
     "serverless-http": "^3.1.1",
     "sharp": "^0.33.5",
-    "three": "^0.174.0",
-    "zlib": "^1.0.5",
-    "path": "^0.12.7",
-    "fs": "^0.0.1-security"
+    "three": "^0.174.0"
   },
   "devDependencies": {
     "@types/react": "^19.0.10",

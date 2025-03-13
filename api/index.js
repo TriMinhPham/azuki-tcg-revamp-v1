@@ -1,4 +1,4 @@
-// Simple API handler that doesn't use server-export.js to avoid dependency issues
+// Minimal API handler for Vercel compatibility
 const express = require('express');
 const serverless = require('serverless-http');
 
@@ -39,7 +39,7 @@ app.get('/api/test', (req, res) => {
 });
 
 // Main route handler for all other paths
-app.use('*', (req, res) => {
+app.all('*', (req, res) => {
   // Return info about the request but avoid any complex dependencies
   res.json({
     success: true,
@@ -47,7 +47,6 @@ app.use('*', (req, res) => {
     path: req.originalUrl || req.url,
     method: req.method,
     timestamp: new Date().toISOString(),
-    headers: req.headers,
     message: "This is a simplified handler to diagnose Vercel deployment issues"
   });
 });

@@ -3,8 +3,8 @@ const express = require("express");
 const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 const cors = require("cors");
 const path = require("path");
-const fsSync = require("fs");
-const fs = require("fs").promises;
+// Use built-in modules without explicit package dependencies
+const fs = require("fs");
 require("dotenv").config();
 
 // Import the cache system and helper functions
